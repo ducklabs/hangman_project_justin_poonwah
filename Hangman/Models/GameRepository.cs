@@ -19,5 +19,10 @@ namespace Hangman.Models
         {
             Game = new Game();
         }
+
+        public static void EndGame()
+        {
+            Game = null;
+        }
     }
 }

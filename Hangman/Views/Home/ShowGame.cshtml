@@ -11,9 +11,6 @@
     <img src="~/Content/Images/hang0.gif" alt="Gallows" />
 </div>
 <div>
-    You: @Model.GameState.ToString()!
-</div>
-<div>
     @for (int i = 0; i < 26; i++)
     {
         @Html.ActionLink(Alphabet.AlphaString[i].ToString(), "Guess", new { value = Alphabet.AlphaString[i].ToString() })

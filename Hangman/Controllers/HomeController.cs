@@ -11,15 +11,33 @@ namespace Hangman.Controllers
     {
         public ActionResult Index()
         {
-            GameFacade.CreateGame();
             return View();
+        }
+
+        public ActionResult StartGame()
+        {
+            GameFacade.CreateGame();
+            return RedirectToAction("ShowGame");
+        }
+
+        public ActionResult ShowGame()
+        {
+            return View();
+        }
+
+        public ActionResult EndGame()
+        {
+            var gameResult = GameFacade.GetGameResult();
+            GameFacade.EndGame();
+            return View(gameResult);
         }
 
         public ActionResult Guess(string value)
         {
             GameFacade.Guess(value);
 
-            return View(GameFacade.GetGameResult());
+            return RedirectToAction("EndGame");
+            //return View();
         }
 
 

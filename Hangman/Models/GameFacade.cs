@@ -19,7 +19,23 @@ namespace Hangman.Models
 
         public static void CreateGame()
         {
-            GameRepository.CreateGame();
+            if (!IsGameInProgress)
+                GameRepository.CreateGame();
+        }
+
+        public static void EndGame()
+        {
+            GameRepository.EndGame();
+        }
+
+        public static bool IsGameInProgress
+        {
+            get
+            {
+                if (GameRepository.FindCurrentGame() != null)
+                    return true;
+                return false;
+            }
         }
 
         public static GameStatus GetGameStatus()

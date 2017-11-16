@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using FluentAssertions;
+using FluentAssertions.Common;
 using Hangman.Models;
 using NUnit.Framework;
 
@@ -48,9 +49,7 @@ namespace Hangman.Tests
         {
             // assemble
             GameFacade.CreateGame();
-
-            GameStatus gameStatus = GameFacade.GetGameStatus();
-
+            
             // act
             GameFacade.Guess(null);
 
@@ -65,6 +64,7 @@ namespace Hangman.Tests
             // assemble
             GameFacade.CreateGame();
             GameStatus firstGameStatus = GameFacade.GetGameStatus();
+            GameFacade.EndGame();
             // act
             GameFacade.CreateGame();
             // assert
@@ -73,7 +73,7 @@ namespace Hangman.Tests
         }
 
         [Test]
-        public void TestWordGeneratorWordGeneration()
+        public void TestSingleLetterWordGeneratorWordGeneration()
         {
             string word = WordGenerator.GenerateWord(1);
 
@@ -84,26 +84,41 @@ namespace Hangman.Tests
         [Test]
         public void TestResumeActiveGame()
         {
-            
+            GameFacade.CreateGame();
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+
+            //Creating a new game should just return the existing game.
+            GameFacade.CreateGame();
+            GameStatus gameStatus2 = GameFacade.GetGameStatus();
+
+            gameStatus.CorrectWord.ShouldBeEquivalentTo(gameStatus2.CorrectWord);
         }
 
         [Test]
         public void TestGameOverNewGame()
         {
-            
+            GameFacade.CreateGame();
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+            GameFacade.Guess("A");
+            GameFacade.EndGame();
+
+            GameFacade.CreateGame();
+            GameStatus gameStatus2 = GameFacade.GetGameStatus();
+
+            //Random selection can fail this test.
+            gameStatus.CorrectWord.Should().NotBeSameAs(gameStatus2.CorrectWord);
         }
 
         [Test]
         public void TestGameOverNoNewGame()
         {
             // assemble
-            //GameFacade.CreateGame();
+            GameFacade.CreateGame();
             // act
-            //GameFacade.Guess("A");
-            //End game 
-            // assert
-            //Assert the game is null
-            //firstGameStatus.CorrectWord.Should().NotBeSameAs(secondGameStatus.CorrectWord);
+            GameFacade.Guess("A");
+            GameFacade.EndGame();
+            //assert
+            GameFacade.IsGameInProgress.Should().BeFalse();
         }
     }
 
