@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Hangman.Models;
 
 namespace Hangman.Controllers
 {
@@ -10,21 +11,17 @@ namespace Hangman.Controllers
     {
         public ActionResult Index()
         {
+            GameFacade.CreateGame();
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Guess(string value)
         {
-            ViewBag.Message = "Your application description page.";
+            GameFacade.Guess(value);
 
-            return View();
+            return View(GameFacade.GetGameResult());
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
-            return View();
-        }
     }
 }

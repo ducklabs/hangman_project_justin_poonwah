@@ -7,6 +7,12 @@ namespace Hangman.Models
 {
     public class GameResult
     {
-        public String gamestatus = "Won";
+        public GameState GameState { get; set; }
+
+        public GameResult(GameState gameState)
+        {
+            GameState = gameState;
+        }
     }
+
 }
