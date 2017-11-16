@@ -1,4 +1,6 @@
-﻿
+﻿@using Hangman.Models
+@model GameResult
+
 @{
     ViewBag.Title = "Justin's Hangman";
 }
@@ -9,4 +11,7 @@
 </div>
 <div>
     You: @Model.GameState.ToString()!
+</div>
+<div>
+    Play Another? @Html.ActionLink("Yes", "StartGame") @Html.ActionLink("No", "Reset")
 </div>

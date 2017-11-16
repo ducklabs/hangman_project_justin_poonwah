@@ -22,7 +22,7 @@ namespace Hangman.Controllers
 
         public ActionResult ShowGame()
         {
-            return View();
+            return View(GameFacade.GetGameStatus());
         }
 
         public ActionResult EndGame()
@@ -40,6 +40,10 @@ namespace Hangman.Controllers
             //return View();
         }
 
+        public ActionResult Reset()
+        {
+            return Redirect("Index");
+        }
 
     }
 }

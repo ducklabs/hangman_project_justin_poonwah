@@ -1,7 +1,5 @@
 ﻿@using Hangman.Util
-@using Hangman.Models
-@model GameResult
-
+@model Hangman.Models.GameStatus
 @{
     ViewBag.Title = "Justin's Hangman";
 }
@@ -16,4 +14,10 @@
         @Html.ActionLink(Alphabet.AlphaString[i].ToString(), "Guess", new { value = Alphabet.AlphaString[i].ToString() })
         ;
     }
+</div>
+<div>
+    <div>Hint?</div>
+    <div style="color:white">
+        @Model.CorrectWord
+    </div>
 </div>
