@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Hangman.Models
 {
-    public enum GameState
+    public enum GameResultState
     {
         Won, Lost
     }

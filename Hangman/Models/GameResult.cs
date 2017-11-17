@@ -7,11 +7,11 @@ namespace Hangman.Models
 {
     public class GameResult
     {
-        public GameState GameState { get; set; }
+        public GameResultState GameResultState { get; set; }
 
-        public GameResult(GameState gameState)
+        public GameResult(GameResultState gameResultState)
         {
-            GameState = gameState;
+            GameResultState = gameResultState;
         }
     }
 

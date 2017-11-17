@@ -12,36 +12,10 @@ namespace Hangman.Tests
     [TestFixture]
     public class HangmanTest
     {
-        [Test]
-        public void TestGuessRight()
+        [TearDown]
+        public void TearDown()
         {
-            // assemble
-            GameFacade.CreateGame();
-
-            GameStatus gameStatus = GameFacade.GetGameStatus();
-
-            // act
-            GameFacade.Guess(gameStatus.CorrectWord);
-            
-            // asssert
-            GameResult result = GameFacade.GetGameResult();
-            result.GameState.ShouldBeEquivalentTo(GameState.Won);
-        }
-
-        [Test]
-        public void TestGuessWrong()
-        {
-            // assemble
-            GameFacade.CreateGame();
-
-            GameStatus gameStatus = GameFacade.GetGameStatus();
-
-            // act
-            GameFacade.Guess(gameStatus.CorrectWord + "A");
-
-            // asssert
-            GameResult result = GameFacade.GetGameResult();
-            result.GameState.ShouldBeEquivalentTo(GameState.Lost);
+            GameFacade.EndGame();
         }
 
         [Test]
@@ -54,8 +28,73 @@ namespace Hangman.Tests
             GameFacade.Guess(null);
 
             //assert
-            GameResult result = GameFacade.GetGameResult();
-            result.GameState.ShouldBeEquivalentTo(GameState.Lost);
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+            gameStatus.CorrectGuessedLetters.Should().BeEmpty();
+            gameStatus.IncorrectGuessedLetters.Should().BeEmpty();
+        }
+
+        [Test]
+        public void TestGuessCorrectLetter()
+        {
+            // assemble
+            GameFacade.CreateGame();
+            string letterGuess = GameFacade.GetGameStatus().CorrectWord[0].ToString().ToLower();
+
+            // act
+            GameFacade.Guess(letterGuess);
+
+            // assert
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+            gameStatus.CorrectGuessedLetters.Should().Contain(letterGuess);
+            gameStatus.IncorrectGuessedLetters.Should().BeEmpty();
+        }
+
+        [Test]
+        public void TestGuessIncorrectLetter()
+        {
+            // assemble
+            GameFacade.CreateGame();
+
+            // act
+            GameFacade.Guess("1");
+
+            // assert
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+            gameStatus.IncorrectGuessedLetters.Should().Contain("1");
+            gameStatus.CorrectGuessedLetters.Should().BeEmpty();
+        }
+
+        [Test]
+        public void TestWordGuessed()
+        {
+            // assert
+            GameFacade.CreateGame();
+            
+            // act
+            for (int i = 0; i < GameFacade.GetGameStatus().CorrectWord.Length; i++)
+            {
+                string letterGuess = GameFacade.GetGameStatus().CorrectWord[i].ToString();
+                GameFacade.Guess(letterGuess);
+            }
+
+            // assemble
+            GameFacade.GetGameResult().GameResultState.ShouldBeEquivalentTo(GameResultState.Won);
+        }
+
+        [Test]
+        public void TestTooManyGuesses()
+        {
+            // assemble
+            GameFacade.CreateGame();
+
+            // act
+            for (int i = 0; i < 10; i++)
+            {
+                GameFacade.Guess("1");
+            }
+
+            // assert
+            GameFacade.GetGameResult().GameResultState.ShouldBeEquivalentTo(GameResultState.Lost);
         }
 
         [Test]
@@ -75,10 +114,18 @@ namespace Hangman.Tests
         [Test]
         public void TestSingleLetterWordGeneratorWordGeneration()
         {
-            string word = WordGenerator.GenerateWord(1);
+            string word = WordGenerator.GenerateRandomLetter(1);
 
             Assert.That(word.Length, Is.GreaterThan(0));
             Assert.That(word.Length, Is.LessThan(2));
+        }
+
+        [Test]
+        public void TestMultiLetterWordGeneratorWordGeneration()
+        {
+            string word = WordGenerator.GenerateRandomWord();
+
+            Assert.That(word.Length, Is.GreaterThan(0));
         }
 
         [Test]
@@ -97,12 +144,16 @@ namespace Hangman.Tests
         [Test]
         public void TestGameOverNewGame()
         {
+            // assemble
             GameFacade.CreateGame();
             GameStatus gameStatus = GameFacade.GetGameStatus();
             GameFacade.Guess("A");
             GameFacade.EndGame();
 
+            // act
             GameFacade.CreateGame();
+
+            // assemble
             GameStatus gameStatus2 = GameFacade.GetGameStatus();
 
             //Random selection can fail this test.

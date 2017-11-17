@@ -36,8 +36,9 @@ namespace Hangman.Controllers
         {
             GameFacade.Guess(value);
 
-            return RedirectToAction("EndGame");
-            //return View();
+            if(GameFacade.IsGameOver)
+                return RedirectToAction("EndGame");
+            return RedirectToAction("ShowGame");
         }
 
         public ActionResult Reset()

@@ -38,6 +38,18 @@ namespace Hangman.Models
             }
         }
 
+        public static bool IsGameOver
+        {
+            get
+            {
+                if (GameRepository.FindCurrentGame() == null)
+                    return true;
+                if (GameRepository.FindCurrentGame().GameIsOver())
+                    return true;
+                return false;
+            }
+        }
+
         public static GameStatus GetGameStatus()
         {
             return GameRepository.FindCurrentGame().GetGameStatus();
