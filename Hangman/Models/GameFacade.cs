@@ -12,7 +12,7 @@ namespace Hangman.Models
             return GameRepository.FindCurrentGame().GetGameResult();
         }
 
-        public static void Guess(string guess)
+        public static void Guess(char guess)
         {
             GameRepository.FindCurrentGame().Guess(guess);
         }

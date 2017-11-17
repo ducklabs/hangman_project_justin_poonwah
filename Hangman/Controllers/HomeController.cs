@@ -24,8 +24,7 @@ namespace Hangman.Controllers
         {
             if (!GameFacade.IsGameInProgress)
                 return RedirectToAction("Index");
-
-            ViewBag.ImagePath = ImagePath;
+            
             return View(GameFacade.GetGameStatus());
         }
 
@@ -42,7 +41,7 @@ namespace Hangman.Controllers
             return View(gameResult);
         }
 
-        public ActionResult Guess(string value)
+        public ActionResult Guess(char value)
         {
             GameFacade.Guess(value);
 
@@ -54,11 +53,6 @@ namespace Hangman.Controllers
         public ActionResult Reset()
         {
             return Redirect("Index");
-        }
-
-        public string ImagePath
-        {
-            get { return "~/Content/Images/hang" + GameFacade.GetGameStatus().IncorrectGuessedLetters.Length + ".gif"; }
         }
 
     }

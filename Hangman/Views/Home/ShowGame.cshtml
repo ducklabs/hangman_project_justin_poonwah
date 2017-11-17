@@ -14,13 +14,12 @@
 <div>
     @for (int i = 0; i < @Model.CorrectWord.Length; i++)
     {
-        if (@Model.CorrectGuessedLetters.ToLower().Contains(@Model.CorrectWord[i].ToString().ToLower()))
+        if (@Model.CorrectGuessedLetters.Contains(Char.ToLower(@Model.CorrectWord[i])))
         {
             <text>@Model.CorrectWord[i]</text>
         }
         else
         {
-            
             <text>_</text>
         }
     }
@@ -28,14 +27,17 @@
 <div>
     @for (int i = 0; i < 26; i++)
     {
-        if (Model.IncorrectGuessedLetters.ToUpper().Contains(Alphabet.AlphaString[i].ToString()))
+        if (Model.IncorrectGuessedLetters.Contains(Char.ToLower(Alphabet.AlphaString[i])))
         {
-            <text><del>@Alphabet.AlphaString[i]</del></text>
+            <text><del style="color: red">@Alphabet.AlphaString[i]</del></text>
+        }
+        else if (Model.CorrectGuessedLetters.Contains(Char.ToLower(Alphabet.AlphaString[i])))
+        {
+            <text><b style="color: green">@Alphabet.AlphaString[i]</b></text>
         }
         else
         {
             <text>@Html.ActionLink(Alphabet.AlphaString[i].ToString(), "Guess", new { value = Alphabet.AlphaString[i].ToString() })</text>
-
         }
     }
 </div>

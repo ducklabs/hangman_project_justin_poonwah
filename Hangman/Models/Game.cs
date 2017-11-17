@@ -12,7 +12,8 @@ namespace Hangman.Models
 
         private GameResultState _gameResultState;
         private string _correctWord;
-        private string _correctGuessedLetters = "", _incorrectGuessedLetters = "";
+        private HashSet<char> _correctGuessedLetters = new HashSet<char>();
+        private HashSet<char> _incorrectGuessedLetters = new HashSet<char>();
 
         public Game()
         {
@@ -24,9 +25,9 @@ namespace Hangman.Models
             return new GameResult(_gameResultState, GetStepsIntoTheGallow(), _correctWord);
         }
 
-        public void Guess(string guess)
+        public void Guess(char guess)
         {
-            if (guess.IsNullOrWhiteSpace()) return;
+            //if (guess == null) return;
             AddGuess(guess);
             if (GameIsOver())
             {
@@ -62,41 +63,35 @@ namespace Hangman.Models
         private bool HasGuessedAllLettersCorrectly()
         {
             var correctLetterSet = ConvertStringToLetterSet(_correctWord);
-            var correctLetterGuessesSet = ConvertStringToLetterSet(_correctGuessedLetters);
-            return correctLetterSet.SetEquals(correctLetterGuessesSet);
+            return correctLetterSet.SetEquals(_correctGuessedLetters);
         }
 
         private HashSet<char> ConvertStringToLetterSet(string stringToConvert)
         {
-            var letterSet = new HashSet<char>();
-            foreach (var letter in stringToConvert.ToLower().ToCharArray())
-            {
-                letterSet.Add(letter);
-            }
-            return letterSet;
+            return new HashSet<char>(stringToConvert.ToLower().ToCharArray());
         }
 
         private int GetStepsIntoTheGallow()
         {
-            return _incorrectGuessedLetters.Length;
+            return _incorrectGuessedLetters.Count;
         }
 
         private bool HasTooManyIncorrectGuesses()
         {
-            return _incorrectGuessedLetters.Length >= MAX_NUMBER_OF_GUESSES;
+            return _incorrectGuessedLetters.Count >= MAX_NUMBER_OF_GUESSES;
         }
 
-        private void AddGuess(string guess)
+        private void AddGuess(char guess)
         {
-            guess = guess.ToLower();
+            guess = Char.ToLower(guess);
             var correctLetterSet = ConvertStringToLetterSet(_correctWord);
-            if (correctLetterSet.Contains(guess.ToCharArray()[0]))
+            if (correctLetterSet.Contains(guess))
             {
-                _correctGuessedLetters += guess;
+                _correctGuessedLetters.Add(guess);
             }
             else
             {
-                _incorrectGuessedLetters += guess;
+                _incorrectGuessedLetters.Add(guess);
             }
         }
     }

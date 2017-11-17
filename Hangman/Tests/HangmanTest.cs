@@ -25,7 +25,7 @@ namespace Hangman.Tests
             GameFacade.CreateGame();
             
             // act
-            GameFacade.Guess(null);
+            GameFacade.Guess(' ');
 
             //assert
             GameStatus gameStatus = GameFacade.GetGameStatus();
@@ -39,7 +39,7 @@ namespace Hangman.Tests
         {
             // assemble
             GameFacade.CreateGame();
-            string letterGuess = GameFacade.GetGameStatus().CorrectWord[0].ToString().ToLower();
+            char letterGuess = GameFacade.GetGameStatus().CorrectWord[0];
 
             // act
             GameFacade.Guess(letterGuess);
@@ -58,11 +58,11 @@ namespace Hangman.Tests
             GameFacade.CreateGame();
 
             // act
-            GameFacade.Guess("1");
+            GameFacade.Guess('1');
 
             // assert
             GameStatus gameStatus = GameFacade.GetGameStatus();
-            gameStatus.IncorrectGuessedLetters.Should().Contain("1");
+            gameStatus.IncorrectGuessedLetters.Should().Contain('1');
             gameStatus.CorrectGuessedLetters.Should().BeEmpty();
             gameStatus.StepsIntoTheGallows.Should().Be(1);
         }
@@ -76,7 +76,7 @@ namespace Hangman.Tests
             // act
             for (int i = 0; i < GameFacade.GetGameStatus().CorrectWord.Length; i++)
             {
-                string letterGuess = GameFacade.GetGameStatus().CorrectWord[i].ToString();
+                char letterGuess = GameFacade.GetGameStatus().CorrectWord[i];
                 GameFacade.Guess(letterGuess);
             }
 
@@ -84,7 +84,7 @@ namespace Hangman.Tests
             GameFacade.GetGameResult().GameResultState.Should().Be(GameResultState.Won);
             GameStatus gameStatus = GameFacade.GetGameStatus();
             gameStatus.IncorrectGuessedLetters.Should().BeEmpty();
-            gameStatus.CorrectGuessedLetters.ToCharArray().Should().Contain(GameFacade.GetGameStatus().CorrectWord.ToLower().ToCharArray());
+            gameStatus.CorrectGuessedLetters.Should().Contain(GameFacade.GetGameStatus().CorrectWord.ToLower().ToCharArray());
             gameStatus.StepsIntoTheGallows.Should().Be(0);
         }
 
@@ -97,7 +97,7 @@ namespace Hangman.Tests
             // act
             for (int i = GameFacade.GetGameStatus().CorrectWord.Length - 1; i >= 0 ; i--)
             {
-                string letterGuess = GameFacade.GetGameStatus().CorrectWord[i].ToString();
+                char letterGuess = GameFacade.GetGameStatus().CorrectWord[i];
                 GameFacade.Guess(letterGuess);
             }
 
@@ -106,7 +106,7 @@ namespace Hangman.Tests
             gameResult.GameResultState.Should().Be(GameResultState.Won);
             GameStatus gameStatus = GameFacade.GetGameStatus();
             gameStatus.IncorrectGuessedLetters.Should().BeEmpty();
-            gameStatus.CorrectGuessedLetters.ToCharArray().Should().Contain(GameFacade.GetGameStatus().CorrectWord.ToLower().ToCharArray());
+            gameStatus.CorrectGuessedLetters.Should().Contain(GameFacade.GetGameStatus().CorrectWord.ToLower().ToCharArray());
             gameStatus.StepsIntoTheGallows.Should().Be(0);
             gameStatus.CorrectWord.Should().Be(gameResult.CorrectWord);
         }
@@ -120,14 +120,14 @@ namespace Hangman.Tests
             // act
             for (int i = 0; i < 10; i++)
             {
-                GameFacade.Guess("1");
+                GameFacade.Guess('1');
             }
 
             // assert
             GameResult gameResult = GameFacade.GetGameResult();
             gameResult.GameResultState.ShouldBeEquivalentTo(GameResultState.Lost);
             GameStatus gameStatus = GameFacade.GetGameStatus();
-            gameStatus.IncorrectGuessedLetters.Should().Contain("1");
+            gameStatus.IncorrectGuessedLetters.Should().Contain('1');
             gameStatus.CorrectGuessedLetters.Should().BeEmpty();
             gameStatus.StepsIntoTheGallows.Should().Be(10);
             gameStatus.CorrectWord.Should().Be(gameResult.CorrectWord);
@@ -183,7 +183,7 @@ namespace Hangman.Tests
             // assemble
             GameFacade.CreateGame();
             GameStatus gameStatus = GameFacade.GetGameStatus();
-            GameFacade.Guess("A");
+            GameFacade.Guess('A');
             GameFacade.EndGame();
 
             // act
@@ -202,7 +202,7 @@ namespace Hangman.Tests
             // assemble
             GameFacade.CreateGame();
             // act
-            GameFacade.Guess("A");
+            GameFacade.Guess('A');
             GameFacade.EndGame();
             //assert
             GameFacade.IsGameInProgress.Should().BeFalse();
