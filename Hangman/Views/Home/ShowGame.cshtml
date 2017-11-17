@@ -6,7 +6,10 @@
 
 <div class="row">
     <h2>Justin's Hangman</h2>
-    <img src="~/Content/Images/hang0.gif" alt="Gallows" />
+    @{
+        var gallowsImagePath = "/Content/Images/hang" + @Model.StepsIntoTheGallows + ".gif";
+    }
+    <img src='@gallowsImagePath' alt="Gallows" />
 </div>
 <div>
     @for (int i = 0; i < @Model.CorrectWord.Length; i++)
@@ -17,6 +20,7 @@
         }
         else
         {
+            
             <text>_</text>
         }
     }
@@ -24,8 +28,15 @@
 <div>
     @for (int i = 0; i < 26; i++)
     {
-        @Html.ActionLink(Alphabet.AlphaString[i].ToString(), "Guess", new { value = Alphabet.AlphaString[i].ToString() })
-        ;
+        if (Model.IncorrectGuessedLetters.ToUpper().Contains(Alphabet.AlphaString[i].ToString()))
+        {
+            <text><del>@Alphabet.AlphaString[i]</del></text>
+        }
+        else
+        {
+            <text>@Html.ActionLink(Alphabet.AlphaString[i].ToString(), "Guess", new { value = Alphabet.AlphaString[i].ToString() })</text>
+
+        }
     }
 </div>
 <div>

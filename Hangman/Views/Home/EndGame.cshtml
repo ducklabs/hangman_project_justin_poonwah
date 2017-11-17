@@ -5,9 +5,13 @@
     ViewBag.Title = "Justin's Hangman";
 }
 
-<div class="row">
-    <h2>Justin's Hangman</h2>
-    <img src="~/Content/Images/hang0.gif" alt="Gallows" />
+<h2>Justin's Hangman</h2>
+@{
+    var gallowsImagePath = "/Content/Images/hang" + @Model.StepsIntoTheGallows + ".gif";
+}
+<img src='@gallowsImagePath' alt="Gallows" />
+<div>
+    @Model.CorrectWord.ToString()
 </div>
 <div>
     You: @Model.GameResultState.ToString()!

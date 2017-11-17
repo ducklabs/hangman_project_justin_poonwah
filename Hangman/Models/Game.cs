@@ -21,7 +21,7 @@ namespace Hangman.Models
 
         public GameResult GetGameResult()
         {
-            return new GameResult(_gameResultState);
+            return new GameResult(_gameResultState, GetStepsIntoTheGallow(), _correctWord);
         }
 
         public void Guess(string guess)
@@ -37,8 +37,10 @@ namespace Hangman.Models
 
         public GameStatus GetGameStatus()
         {
-            return new GameStatus(_correctWord, _correctGuessedLetters, _incorrectGuessedLetters);
+            return new GameStatus(_correctWord, _correctGuessedLetters, _incorrectGuessedLetters, GetStepsIntoTheGallow());
         }
+
+
 
         private void EndGame()
         {
@@ -61,7 +63,7 @@ namespace Hangman.Models
         {
             var correctLetterSet = ConvertStringToLetterSet(_correctWord);
             var correctLetterGuessesSet = ConvertStringToLetterSet(_correctGuessedLetters);
-            return correctLetterSet.Count.Equals(correctLetterGuessesSet.Count);
+            return correctLetterSet.SetEquals(correctLetterGuessesSet);
         }
 
         private HashSet<char> ConvertStringToLetterSet(string stringToConvert)
@@ -72,6 +74,11 @@ namespace Hangman.Models
                 letterSet.Add(letter);
             }
             return letterSet;
+        }
+
+        private int GetStepsIntoTheGallow()
+        {
+            return _incorrectGuessedLetters.Length;
         }
 
         private bool HasTooManyIncorrectGuesses()

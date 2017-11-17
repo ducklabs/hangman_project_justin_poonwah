@@ -22,11 +22,21 @@ namespace Hangman.Controllers
 
         public ActionResult ShowGame()
         {
+            if (!GameFacade.IsGameInProgress)
+                return RedirectToAction("Index");
+
+            ViewBag.ImagePath = ImagePath;
             return View(GameFacade.GetGameStatus());
         }
 
         public ActionResult EndGame()
         {
+            if (!GameFacade.IsGameInProgress)
+                return RedirectToAction("Index");
+
+            if(!GameFacade.IsGameOver)
+                return RedirectToAction("ShowGame");
+
             var gameResult = GameFacade.GetGameResult();
             GameFacade.EndGame();
             return View(gameResult);
@@ -44,6 +54,11 @@ namespace Hangman.Controllers
         public ActionResult Reset()
         {
             return Redirect("Index");
+        }
+
+        public string ImagePath
+        {
+            get { return "~/Content/Images/hang" + GameFacade.GetGameStatus().IncorrectGuessedLetters.Length + ".gif"; }
         }
 
     }

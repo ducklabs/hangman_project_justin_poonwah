@@ -11,12 +11,14 @@ namespace Hangman.Models
         public string WordHint { get; set; }
         public string CorrectGuessedLetters { get; set; }
         public string IncorrectGuessedLetters { get; set; }
+        public int StepsIntoTheGallows { get; set; }
 
-        public GameStatus(string theCorrectWord, string correctGuessedLetters, string incorrectGuessedLetters)
+        public GameStatus(string theCorrectWord, string correctGuessedLetters, string incorrectGuessedLetters, int stepsIntoTheGallows)
         {
             CorrectWord = theCorrectWord;
             CorrectGuessedLetters = correctGuessedLetters;
             IncorrectGuessedLetters = incorrectGuessedLetters;
+            StepsIntoTheGallows = stepsIntoTheGallows;
         }
     }
 }
