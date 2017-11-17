@@ -27,7 +27,7 @@ namespace Hangman.Models
 
         public void Guess(char guess)
         {
-            //if (guess == null) return;
+            if (Char.IsWhiteSpace(guess)) return;
             AddGuess(guess);
             if (GameIsOver())
             {

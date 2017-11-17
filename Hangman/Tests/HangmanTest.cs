@@ -46,7 +46,7 @@ namespace Hangman.Tests
 
             // assert
             GameStatus gameStatus = GameFacade.GetGameStatus();
-            gameStatus.CorrectGuessedLetters.Should().Contain(letterGuess);
+            gameStatus.CorrectGuessedLetters.Should().Contain(Char.ToLower(letterGuess));
             gameStatus.IncorrectGuessedLetters.Should().BeEmpty();
             gameStatus.StepsIntoTheGallows.Should().Be(0);
         }
@@ -120,7 +120,7 @@ namespace Hangman.Tests
             // act
             for (int i = 0; i < 10; i++)
             {
-                GameFacade.Guess('1');
+                GameFacade.Guess(i.ToString()[0]);
             }
 
             // assert
