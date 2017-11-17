@@ -54,5 +54,10 @@ namespace Hangman.Models
         {
             return GameRepository.FindCurrentGame().GetGameStatus();
         }
+
+        public static void GuessWholeWord(string wordGuess)
+        {
+            GameRepository.FindCurrentGame().GuessWholeWord(wordGuess);
+        }
     }
 }

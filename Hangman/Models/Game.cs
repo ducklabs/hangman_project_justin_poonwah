@@ -94,5 +94,10 @@ namespace Hangman.Models
                 _incorrectGuessedLetters.Add(guess);
             }
         }
+
+        public void GuessWholeWord(string wordGuess)
+        {
+
+        }
     }
 }

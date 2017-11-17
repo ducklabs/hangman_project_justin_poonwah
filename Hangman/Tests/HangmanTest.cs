@@ -68,7 +68,7 @@ namespace Hangman.Tests
         }
 
         [Test]
-        public void TestWordGuessed()
+        public void TestWordGuessedWithLetters()
         {
             // assert
             GameFacade.CreateGame();
@@ -87,7 +87,7 @@ namespace Hangman.Tests
             gameStatus.CorrectGuessedLetters.Should().Contain(GameFacade.GetGameStatus().CorrectWord.ToLower().ToCharArray());
             gameStatus.StepsIntoTheGallows.Should().Be(0);
         }
-
+        
         [Test]
         public void TestWordGuessedBackwards()
         {
@@ -159,21 +159,25 @@ namespace Hangman.Tests
         [Test]
         public void TestMultiLetterWordGeneratorWordGeneration()
         {
+            //assemble
+            //act
             string word = WordGenerator.GenerateRandomWord();
-
+            //assert
             Assert.That(word.Length, Is.GreaterThan(0));
         }
 
         [Test]
         public void TestResumeActiveGame()
         {
+            //assemble
             GameFacade.CreateGame();
             GameStatus gameStatus = GameFacade.GetGameStatus();
 
-            //Creating a new game should just return the existing game.
+            //act
             GameFacade.CreateGame();
             GameStatus gameStatus2 = GameFacade.GetGameStatus();
 
+            //assert
             gameStatus.CorrectWord.Should().Be(gameStatus2.CorrectWord);
         }
 
@@ -206,6 +210,73 @@ namespace Hangman.Tests
             GameFacade.EndGame();
             //assert
             GameFacade.IsGameInProgress.Should().BeFalse();
+        }
+        
+
+        [Test]
+        public void Test1LetterMatchWith1Guess()
+        {
+            // assert
+            GameFacade.CreateGame();
+
+            // act
+            char letterGuess = GameFacade.GetGameStatus().CorrectWord[0];
+            GameFacade.Guess(letterGuess);
+            
+            // assemble
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+            gameStatus.IncorrectGuessedLetters.Should().BeEmpty();
+            gameStatus.CorrectGuessedLetters.Count.Should().Be(1);
+            gameStatus.StepsIntoTheGallows.Should().Be(0);
+        }
+
+
+        [Test]
+        public void Test3LetterMatchWith9Guesses()
+        {
+            // assert
+            GameFacade.CreateGame();
+            // act
+            for (int i = 0; i < 3; i++)
+            {
+                GameFacade.Guess(GameFacade.GetGameStatus().CorrectWord[i]);
+            }
+
+            for (int i = 0; i < 6; i++)
+            {
+                GameFacade.Guess(i.ToString()[0]);
+            }
+
+            // assemble
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+            gameStatus.CorrectGuessedLetters.Count.Should().Be(3);
+            gameStatus.StepsIntoTheGallows.Should().Be(6);
+            (gameStatus.StepsIntoTheGallows + gameStatus.CorrectGuessedLetters.Count).Should().Be(9);
+        }
+
+        [Test]
+        public void TestAllLetterMatchWith9IncorrectGuesses()
+        {
+            // assert
+            GameFacade.CreateGame();
+
+            // act
+            for (int i = 0; i < GameFacade.GetGameStatus().CorrectWord.Length; i++)
+            {
+                GameFacade.Guess(GameFacade.GetGameStatus().CorrectWord[i]);
+            }
+
+            for (int i = 0; i < 9; i++)
+            {
+                GameFacade.Guess(i.ToString()[0]);
+            }
+
+            // assemble
+            HashSet<char> set = new HashSet<char>(GameFacade.GetGameStatus().CorrectWord.ToLower().ToCharArray());
+            GameFacade.GetGameResult().GameResultState.Should().Be(GameResultState.Won);
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+            gameStatus.CorrectGuessedLetters.Count.Should().Be(set.Count);
+            gameStatus.StepsIntoTheGallows.Should().Be(9);
         }
     }
 
