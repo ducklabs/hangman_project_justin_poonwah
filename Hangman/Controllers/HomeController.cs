@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.SessionState;
 using Hangman.Models;
 
 namespace Hangman.Controllers
@@ -11,6 +12,11 @@ namespace Hangman.Controllers
     {
         public ActionResult Index()
         {
+            if (Session["UserId"] == null)
+                Session["UserId"] = "JP";
+            else
+                Session["UserId"] = "JPSSS";
+            ViewBag.SessionId = Session["UserId"];
             return View();
         }
 

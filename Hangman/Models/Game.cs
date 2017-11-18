@@ -17,7 +17,7 @@ namespace Hangman.Models
 
         public Game()
         {
-            this._correctWord = WordGenerator.GenerateRandomWord();
+            this._correctWord = WordGeneratorFactory.Instance.GenerateNextWord();
         }
 
         public GameResult GetGameResult()

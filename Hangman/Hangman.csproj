@@ -155,13 +155,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ConfigurableWordGenerator.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\GameFacade.cs" />
     <Compile Include="Models\GameRepository.cs" />
     <Compile Include="Models\GameResult.cs" />
     <Compile Include="Models\GameResultState.cs" />
     <Compile Include="Models\GameStatus.cs" />
-    <Compile Include="Models\WordGenerator.cs" />
+    <Compile Include="Models\PreMadeListWordGenerator.cs" />
+    <Compile Include="Models\WordGeneratorFactory.cs" />
     <Compile Include="Models\WordState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\HangmanTest.cs" />

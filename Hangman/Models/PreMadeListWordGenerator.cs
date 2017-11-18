@@ -5,10 +5,10 @@ using System.Web;
 
 namespace Hangman.Models
 {
-    public static class WordGenerator
+    public class PreMadeListWordGenerator : WordGenerator
     {
-        private static string[] _possibleWords;
-        public static string[] PossibleWords
+        private string[] _possibleWords;
+        private string[] PossibleWords
         {
             get
             {
@@ -35,17 +35,17 @@ namespace Hangman.Models
             }
         }
 
-        public static string GenerateRandomLetter(int length)
-        {
-            Random random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
+        //internal string GenerateRandomLetter(int length)
+        //{
+        //    Random random = new Random();
+        //    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        //    return new string(Enumerable.Repeat(chars, length)
+        //        .Select(s => s[random.Next(s.Length)]).ToArray());
+        //}
 
-        private static int lastWordIndexUsed = -1;
+        private int lastWordIndexUsed = -1;
 
-        public static string GenerateRandomWord()
+        public string GenerateNextWord()
         {
             Random random = new Random();
             var wordIndex = random.Next(PossibleWords.Length);

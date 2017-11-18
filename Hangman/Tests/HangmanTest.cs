@@ -16,6 +16,7 @@ namespace Hangman.Tests
         public void TearDown()
         {
             GameFacade.EndGame();
+            WordGeneratorFactory.Instance = new PreMadeListWordGenerator();
         }
 
         [Test]
@@ -148,20 +149,12 @@ namespace Hangman.Tests
         }
 
         [Test]
-        public void TestSingleLetterWordGeneratorWordGeneration()
-        {
-            string word = WordGenerator.GenerateRandomLetter(1);
-
-            Assert.That(word.Length, Is.GreaterThan(0));
-            Assert.That(word.Length, Is.LessThan(2));
-        }
-
-        [Test]
         public void TestMultiLetterWordGeneratorWordGeneration()
         {
             //assemble
             //act
-            string word = WordGenerator.GenerateRandomWord();
+            string word = new PreMadeListWordGenerator().GenerateNextWord();
+
             //assert
             Assert.That(word.Length, Is.GreaterThan(0));
         }
@@ -217,7 +210,14 @@ namespace Hangman.Tests
         public void Test1LetterMatchWith1Guess()
         {
             // assert
+            var configurableWordGenerator = new ConfigurableWordGenerator();
+            configurableWordGenerator.Word = "ziplocbag";
+            WordGeneratorFactory.Instance = configurableWordGenerator;
+
             GameFacade.CreateGame();
+
+            // act
+            GameFacade.Guess('z');
 
             // act
             char letterGuess = GameFacade.GetGameStatus().CorrectWord[0];
@@ -235,41 +235,67 @@ namespace Hangman.Tests
         public void Test3LetterMatchWith9Guesses()
         {
             // assert
-            GameFacade.CreateGame();
-            // act
-            for (int i = 0; i < 3; i++)
-            {
-                GameFacade.Guess(GameFacade.GetGameStatus().CorrectWord[i]);
-            }
+            var configurableWordGenerator = new ConfigurableWordGenerator();
+            configurableWordGenerator.Word = "ziplocbag";
+            WordGeneratorFactory.Instance = configurableWordGenerator;
 
-            for (int i = 0; i < 6; i++)
-            {
-                GameFacade.Guess(i.ToString()[0]);
-            }
+            GameFacade.CreateGame();
+
+            // incorrect guesses
+            GameFacade.Guess('d');
+            GameFacade.Guess('e');
+            GameFacade.Guess('f');
+            GameFacade.Guess('h');
+            GameFacade.Guess('j');
+            GameFacade.Guess('k');
+
+            // correct guesses
+            GameFacade.Guess('z');
+            GameFacade.Guess('i');
+
+            // act
+            GameFacade.Guess('p');
 
             // assemble
             GameStatus gameStatus = GameFacade.GetGameStatus();
             gameStatus.CorrectGuessedLetters.Count.Should().Be(3);
             gameStatus.StepsIntoTheGallows.Should().Be(6);
-            (gameStatus.StepsIntoTheGallows + gameStatus.CorrectGuessedLetters.Count).Should().Be(9);
         }
 
         [Test]
         public void TestAllLetterMatchWith9IncorrectGuesses()
         {
             // assert
+            var configurableWordGenerator = new ConfigurableWordGenerator();
+            configurableWordGenerator.Word = "ziplocbag";
+            WordGeneratorFactory.Instance = configurableWordGenerator;
+
             GameFacade.CreateGame();
 
-            // act
-            for (int i = 0; i < GameFacade.GetGameStatus().CorrectWord.Length; i++)
-            {
-                GameFacade.Guess(GameFacade.GetGameStatus().CorrectWord[i]);
-            }
+            // incorrect guesses
+            GameFacade.Guess('d');
+            GameFacade.Guess('e');
+            GameFacade.Guess('f');
+            GameFacade.Guess('h');
+            GameFacade.Guess('j');
+            GameFacade.Guess('k');
+            GameFacade.Guess('m');
+            GameFacade.Guess('n');
+            GameFacade.Guess('q');
 
-            for (int i = 0; i < 9; i++)
-            {
-                GameFacade.Guess(i.ToString()[0]);
-            }
+            // correct guesses
+            GameFacade.Guess('z');
+            GameFacade.Guess('i');
+            GameFacade.Guess('p');
+            GameFacade.Guess('l');
+            GameFacade.Guess('o');
+            GameFacade.Guess('c');
+            GameFacade.Guess('b');
+            GameFacade.Guess('a');
+
+            // act
+            GameFacade.Guess('g');
+
 
             // assemble
             HashSet<char> set = new HashSet<char>(GameFacade.GetGameStatus().CorrectWord.ToLower().ToCharArray());
@@ -277,6 +303,25 @@ namespace Hangman.Tests
             GameStatus gameStatus = GameFacade.GetGameStatus();
             gameStatus.CorrectGuessedLetters.Count.Should().Be(set.Count);
             gameStatus.StepsIntoTheGallows.Should().Be(9);
+        }
+
+        [Test]
+        public void TestWordWithOneCharacterRepeated()
+        {
+            // assert
+            var configurableWordGenerator = new ConfigurableWordGenerator();
+            configurableWordGenerator.Word = "aaaaaaaaaa";
+            WordGeneratorFactory.Instance = configurableWordGenerator;
+            GameFacade.CreateGame();
+
+            // act
+            GameFacade.Guess('a');
+
+            // assemble
+            GameFacade.GetGameResult().GameResultState.Should().Be(GameResultState.Won);
+            GameStatus gameStatus = GameFacade.GetGameStatus();
+            gameStatus.CorrectGuessedLetters.Count.Should().Be(1);
+            gameStatus.StepsIntoTheGallows.Should().Be(0);
         }
     }
 
